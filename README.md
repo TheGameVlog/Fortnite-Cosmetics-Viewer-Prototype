@@ -6,6 +6,8 @@ https://benbotfn.tk/
 
 http://fortnite-api.com/
 
-#Credits
+# Credits
+
 https://github.com/Fortnite-API/csharp-wrapper
+
 https://github.com/JamesNK/Newtonsoft.Json
