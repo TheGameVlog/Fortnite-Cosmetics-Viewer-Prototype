@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="BenbotAES" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://benbotfn.tk/api/v1/aes</Value>
+    </Setting>
+    <Setting Name="BenbotCosmeticsAll" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://benbotfn.tk/api/v1/cosmetics/br</Value>
+    </Setting>
+    <Setting Name="BenBotCosmeticsNew" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://benbotfn.tk/api/v1/newCosmetics</Value>
+    </Setting>
+    <Setting Name="FNAPICosmeticsAll" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://fortnite-api.com/v2/cosmetics/br</Value>
+    </Setting>
+    <Setting Name="FNAPICosmeticsNew" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://fortnite-api.com/v2/cosmetics/br/new</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
