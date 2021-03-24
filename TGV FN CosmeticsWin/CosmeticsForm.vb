@@ -25,34 +25,44 @@ Public Class Form1
             TreeView1.CheckBoxes = False
         End If
     End Sub
+    Dim isVariantNode As Boolean = False
 
     Private Sub TreeView1_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterSelect
-        If TreeView1.SelectedNode.Nodes.Count = 0 Then
-            Dim selectedNode = TreeView1.SelectedNode
-            Dim selectedCosmetic = allCosmetics.Find(Function(value As Fortnite_API.Objects.V2.BrCosmeticV2)
-                                                         Return value.Id = selectedNode.Name
-                                                     End Function)
 
-            If selectedCosmetic IsNot Nothing Then
-                lblCosmeticInfo.ResetText()
-                cosImg.Load(selectedCosmetic.Images.Icon.AbsoluteUri)
-                With selectedCosmetic
-                    lblCosmeticName.Text = .Name
-                    lblRarity.Text = .Rarity.DisplayValue
-                    ColorRarity(.Rarity.DisplayValue)
-                    lblCosmeticInfo.AppendText(.Id)
+        Dim selectedNode = e.Node
+
+        Dim selectedCosmetic = allCosmetics.Find(Function(value As Fortnite_API.Objects.V2.BrCosmeticV2)
+                                                     Return value.Id = selectedNode.Name
+                                                 End Function)
+
+        If selectedCosmetic IsNot Nothing Then
+            lblCosmeticInfo.ResetText()
+            cosImg.Load(selectedCosmetic.Images.Icon.AbsoluteUri)
+            With selectedCosmetic
+                lblCosmeticName.Text = .Name
+                lblRarity.Text = .Rarity.DisplayValue
+                ColorRarity(.Rarity.DisplayValue)
+                lblCosmeticInfo.AppendText(.Id)
+                lblCosmeticInfo.AppendText(vbCrLf)
+                If .HasGameplayTags Then
+                    For Each t As String In .GameplayTags
+                        lblCosmeticInfo.AppendText(t)
+                        lblCosmeticInfo.AppendText(vbCrLf)
+                    Next
+                End If
+                lblCosmeticInfo.AppendText("Has Variants : " & .HasVariants)
+                If .HasVariants Then
+                    isVariantNode = True
                     lblCosmeticInfo.AppendText(vbCrLf)
-                    If .HasGameplayTags Then
-                        For Each t As String In .GameplayTags
-                            lblCosmeticInfo.AppendText(t)
-                            lblCosmeticInfo.AppendText(vbCrLf)
-                        Next
-                    End If
-
-                End With
+                    lblCosmeticInfo.AppendText(.Variants(0).Channel)
+                End If
+            End With
+        Else
+            If e.Node.Name.Contains("fortnite-api.com") Then
+                cosImg.Load(e.Node.Name)
             End If
-
         End If
+        isVariantNode = False
     End Sub
 #End Region
 
@@ -106,8 +116,7 @@ Public Class Form1
     Private Sub cosImg_Paint(sender As Object, e As PaintEventArgs) Handles Panel1.Paint
         Dim direction As LinearGradientMode = LinearGradientMode.Vertical
         Dim Brush As LinearGradientBrush = New LinearGradientBrush(Panel1.ClientRectangle, RarityTop, RarityBottom, direction)
-            e.Graphics.FillRectangle(Brush, Panel1.ClientRectangle)
-
+        e.Graphics.FillRectangle(Brush, Panel1.ClientRectangle)
     End Sub
 
 
@@ -240,12 +249,37 @@ Public Class Form1
         For Each bb As KeyValuePair(Of String, String) In BackBlingList
             If bb.Value <> "null" Then
                 TreeView1.Nodes("BackBlingNode").Nodes.Add(bb.Key, bb.Value)
+                Dim currentCosmetic = allCosmetics.Find(Function(value As Fortnite_API.Objects.V2.BrCosmeticV2)
+                                                            Return value.Id = bb.Key
+                                                        End Function)
+                If currentCosmetic IsNot Nothing Then
+                    If currentCosmetic.HasVariants Then
+                        Dim variantList = currentCosmetic.Variants(0).Options
+                        For Each v As Fortnite_API.Objects.V2.BrCosmeticV2VariantOption In variantList
+                            TreeView1.Nodes("BackBlingNode").Nodes(bb.Key).Nodes.Add(v.Image.ToString(), v.Name)
+                        Next
+
+                    End If
+                End If
+
             End If
         Next
 
         For Each bb As KeyValuePair(Of String, String) In OutfitList
             If bb.Value <> "null" Then
                 TreeView1.Nodes("OutfitNode").Nodes.Add(bb.Key, bb.Value)
+            End If
+            Dim currentCosmetic = allCosmetics.Find(Function(value As Fortnite_API.Objects.V2.BrCosmeticV2)
+                                                        Return value.Id = bb.Key
+                                                    End Function)
+            If currentCosmetic IsNot Nothing Then
+                If currentCosmetic.HasVariants Then
+                    Dim variantList = currentCosmetic.Variants(0).Options
+                    For Each v As Fortnite_API.Objects.V2.BrCosmeticV2VariantOption In variantList
+                        TreeView1.Nodes("OutfitNode").Nodes(bb.Key).Nodes.Add(v.Image.ToString(), v.Name)
+                    Next
+
+                End If
             End If
         Next
 
@@ -264,6 +298,18 @@ Public Class Form1
         For Each bb As KeyValuePair(Of String, String) In PickaxeList
             If bb.Value <> "null" Then
                 TreeView1.Nodes("PickaxeNode").Nodes.Add(bb.Key, bb.Value)
+            End If
+            Dim currentCosmetic = allCosmetics.Find(Function(value As Fortnite_API.Objects.V2.BrCosmeticV2)
+                                                        Return value.Id = bb.Key
+                                                    End Function)
+            If currentCosmetic IsNot Nothing Then
+                If currentCosmetic.HasVariants Then
+                    Dim variantList = currentCosmetic.Variants(0).Options
+                    For Each v As Fortnite_API.Objects.V2.BrCosmeticV2VariantOption In variantList
+                        TreeView1.Nodes("PickaxeNode").Nodes(bb.Key).Nodes.Add(v.Image.ToString(), v.Name)
+                    Next
+
+                End If
             End If
         Next
         For Each bb As KeyValuePair(Of String, String) In MiscList
