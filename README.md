@@ -1,7 +1,7 @@
 # TGVFNCosmetics
 Simple Fortnite Cosmetics Browser Utilizing Fortnite-API and Benbot API
 
-# API Utilized
+# API's Utilized
 https://benbotfn.tk/
 
 http://fortnite-api.com/
